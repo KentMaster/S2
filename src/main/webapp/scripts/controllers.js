@@ -25,6 +25,13 @@ stockindicatorApp.controller('LanguageController', function ($scope, $translate,
 stockindicatorApp.controller('MenuController', function ($scope) {
     });
 
+stockindicatorApp.controller('StockController', function ($scope, StockSerivce) {
+    $scope.symbol = "APPL";
+
+    $scope.save = function(symbol){
+        StockSerivce.findSymbol(symbol);
+    };
+});
 stockindicatorApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService) {
         $scope.rememberMe = true;
         $scope.login = function () {

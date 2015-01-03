@@ -26,6 +26,13 @@ stockindicatorApp
                         authorizedRoles: [USER_ROLES.all]
                     }
                 })
+                .when('/stock', {
+                    templateUrl: 'views/stock.html',
+                    controller: 'StockController',
+                    access: {
+                        authorizedRoles: [USER_ROLES.all]
+                    }
+                })
                 .when('/login', {
                     templateUrl: 'views/login.html',
                     controller: 'LoginController',

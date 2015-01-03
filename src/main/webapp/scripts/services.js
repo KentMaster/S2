@@ -120,6 +120,17 @@ stockindicatorApp.factory('AuditsService', function ($http) {
         }
     });
 
+stockindicatorApp.factory('StockSerivce', function ($http) {
+    return {
+        findSymbol: function(symbol) {
+            var promise = $http.get('app/rest/stock', {params: {symbol: symbol}}).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        }
+    }
+});
+
 stockindicatorApp.factory('Session', function () {
         this.create = function (login, firstName, lastName, email, userRoles) {
             this.login = login;

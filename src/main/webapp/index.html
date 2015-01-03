@@ -19,7 +19,6 @@
         <!--[if lt IE 10]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="development"></div>
         <nav class="navbar navbar-default" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -38,6 +37,22 @@
                                 <span class="glyphicon glyphicon-home"></span>
                                 <span translate="global.menu.home">Home</span>
                             </a>
+                        </li>
+                        <li ng-switch-when="true" class="dropdown pointer">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                                <span>
+                                    <!--<span class="glyphicon glyphicon-th-list"></span>-->
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="hidden-tablet">
+                                        Stock Information
+                                    </span>
+                                    <b class="caret"></b>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu" ng-controller="MenuController">
+                                <li ng-switch-when="true"><a href="#/stock"><span class="glyphicon glyphicon-tower"></span>
+                                    &nbsp;<span>Stock Info</span></a></li>
+                            </ul>
                         </li>
                         <li ng-switch-when="true" class="dropdown pointer">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="">
