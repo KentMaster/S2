@@ -22,9 +22,11 @@ public class StockInfo {
 
     public StockInfo(String date, String symbol, double open, double high, double low, double close, BigInteger volume, double adjustedClose) {
         this.date = date;
+        this.symbol = symbol;
         this.open = open;
         this.high = high;
         this.low = low;
+        this.close = close;
         this.volume = volume;
         this.adjustedClose = adjustedClose;
     }

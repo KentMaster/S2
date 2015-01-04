@@ -27,19 +27,25 @@ public class YahooStockInfoService {
     private StockInfoRepository stockInfoRepository;
 
     public void getStockData(String symbol) throws IOException {
-        FileUtils.copyURLToFile(
-                new URL(String.format("http://real-chart.finance.yahoo.com/table.csv?s=%s&d=11&e=21&f=2014&g=d&a=11&b=12&c=1980&ignore=.csv", symbol)),
-                new File(symbol + ".csv")
-        );
+        File f = new File(symbol + ".csv");
+        if(!f.exists()) {
+            FileUtils.copyURLToFile(
+                    new URL(String.format("http://real-chart.finance.yahoo.com/table.csv?s=%s&d=11&e=21&f=2014&g=d&a=11&b=12&c=2013&ignore=.csv", symbol)),
+                    new File(symbol + ".csv")
+            );
+        }
         readRecords(symbol);
-
-
     }
 
     public List<StockInfo> readRecords(String symbol) throws IOException {
         Function<String, StockInfo> csvToStockInfo = line -> save(line, symbol);
         Path path = Paths.get(symbol + ".csv");
-        List<StockInfo> collect = Files.lines(path).skip(1).map(csvToStockInfo).collect(Collectors.toList());
+        List<StockInfo> collect = Files
+                .lines(path)
+                .parallel()
+                .skip(1)
+                .map(csvToStockInfo)
+                .collect(Collectors.toList());
         return collect;
     }
 

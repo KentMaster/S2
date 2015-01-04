@@ -3,7 +3,7 @@
 /* App Module */
 
 var stockindicatorApp = angular.module('stockindicatorApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-    'ngResource', 'ngRoute', 'ngCookies', 'stockindicatorAppUtils', 'pascalprecht.translate', 'truncate', 'ngCacheBuster']);
+    'ngResource', 'ngRoute', 'ngCookies', 'stockindicatorAppUtils', 'pascalprecht.translate', 'truncate', 'ngCacheBuster','infinite-scroll']);
 
 stockindicatorApp
     .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider, USER_ROLES) {

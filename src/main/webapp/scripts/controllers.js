@@ -25,12 +25,13 @@ stockindicatorApp.controller('LanguageController', function ($scope, $translate,
 stockindicatorApp.controller('MenuController', function ($scope) {
     });
 
-stockindicatorApp.controller('StockController', function ($scope, StockSerivce) {
+stockindicatorApp.controller('StockController', function ($scope, StockService, Reddit) {
     $scope.symbol = "APPL";
 
     $scope.save = function(symbol){
-        StockSerivce.findSymbol(symbol);
+        StockService.findSymbol(symbol);
     };
+    $scope.reddit = new Reddit();
 });
 stockindicatorApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService) {
         $scope.rememberMe = true;
