@@ -26,7 +26,7 @@ stockindicatorApp.controller('MenuController', function ($scope) {
     });
 
 stockindicatorApp.controller('StockController', function ($scope, StockService, Reddit) {
-    $scope.symbol = "APPL";
+    $scope.symbol = "T";
 
     $scope.save = function(symbol){
         StockService.findSymbol(symbol);

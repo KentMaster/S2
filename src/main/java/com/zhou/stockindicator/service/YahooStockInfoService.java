@@ -5,6 +5,9 @@ import com.zhou.stockindicator.repository.StockInfoRepository;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -26,7 +29,7 @@ public class YahooStockInfoService {
     @Inject
     private StockInfoRepository stockInfoRepository;
 
-    public void getStockData(String symbol) throws IOException {
+    public void getStockDataFromYahoo(String symbol) throws IOException {
         File f = new File(symbol + ".csv");
         if(!f.exists()) {
             FileUtils.copyURLToFile(
@@ -35,6 +38,11 @@ public class YahooStockInfoService {
             );
         }
         readRecords(symbol);
+    }
+
+    public List<StockInfo> getStockInfo(String symbol, int pageNumber){
+        Pageable pageable = new PageRequest(pageNumber, 20, new Sort(Sort.Direction.DESC, "date"));
+        return  stockInfoRepository.getBySymbol(symbol,pageable).getContent();
     }
 
     public List<StockInfo> readRecords(String symbol) throws IOException {
