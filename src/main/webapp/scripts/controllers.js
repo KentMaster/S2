@@ -31,7 +31,7 @@ stockindicatorApp.controller('StockController', function ($scope, StockService, 
     $scope.save = function(symbol){
         StockService.findSymbol(symbol);
     };
-    $scope.reddit = new Reddit();
+    $scope.reddit = new Reddit($scope.symbol);
 });
 stockindicatorApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService) {
         $scope.rememberMe = true;

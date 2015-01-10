@@ -132,16 +132,17 @@ stockindicatorApp.factory('StockService', function ($http) {
 });
 
 stockindicatorApp.factory('Reddit', function($http) {
-    var Reddit = function() {
+    var Reddit = function(symbol) {
         this.items = [];
         this.busy = false;
         this.after = 0;
+        this.symbol = symbol;
     };
 
     Reddit.prototype.nextPage = function() {
         if (this.busy) return;
         this.busy = true;
-        $http.get('app/rest/stockinfo', {params: {symbol: "T", pagenumber: this.after}}).then(function (response) {
+        $http.get('app/rest/stockinfo', {params: {symbol: this.symbol, pagenumber: this.after}}).then(function (response) {
             //var item = response.data;
             var items = response.data;
             for(var i = 0; i < items.length; i++){
@@ -172,9 +173,6 @@ stockindicatorApp.factory('Reddit', function($http) {
     //        this.busy = false;
     //    }.bind(this));
     //};
-
-    return Reddit;
-
 
     return Reddit;
 });

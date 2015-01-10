@@ -9,8 +9,48 @@ package com.zhou.stockindicator.indicator;
 //import org.jfree.data.xy.XYDataset;
 //import org.yccheok.jstock.engine.Stock;
 
-public class TechnicalAnalysis {
+import java.util.List;
 
+public class TechnicalAnalysis {
+    /**
+     * Returns SMA time series for charting purpose.
+     *
+     * @return SMA time series for charting purpose
+     */
+    public static List<Double> createSMA(List<Double> dataStream) {
+
+
+        return null;
+//        if (period <= 0) {
+//            throw new IllegalArgumentException("period must be greater than 0");
+//        }
+//
+//        final TimeSeries series = new TimeSeries(name);
+//        final int num = chartDatas.size();
+//
+//        final Core core = new Core();
+//        final int allocationSize = num - core.smaLookback(period);
+//        if (allocationSize <= 0) {
+//            return series;
+//        }
+//        final double[] last = new double[num];
+//        // Fill up last array.
+//        for (int i = 0; i < num; i++) {
+//            last[i] = chartDatas.get(i).lastPrice;
+//        }
+//
+//        final double[] output = new double[allocationSize];
+//        final MInteger outBegIdx = new MInteger();
+//        final MInteger outNbElement = new MInteger();
+//
+//        core.sma(0, last.length - 1, last, period, outBegIdx, outNbElement, output);
+//
+//        for (int i = 0; i < outNbElement.value; i++) {
+//            series.add(new Day(new Date(chartDatas.get(i + outBegIdx.value).timestamp)), output[i]);
+//        }
+//
+//        return series;
+    }
 //    /**
 //     * Returns the latest EMA.
 //     *
@@ -136,45 +176,7 @@ public class TechnicalAnalysis {
 //        return MACD.Result.newInstance(outMACD[outNbElement.value - 1], outMACDSignal[outNbElement.value - 1], outMACDHist[outNbElement.value - 1]);
 //    }
 //
-//    /**
-//     * Returns SMA time series for charting purpose.
-//     *
-//     * @param chartDatas list of chart data
-//     * @param name name for the time series
-//     * @param period the duration period
-//     * @return SMA time series for charting purpose
-//     */
-//    public static TimeSeries createSMA(List<ChartData> chartDatas, String name, int period) {
-//        if (period <= 0) {
-//            throw new IllegalArgumentException("period must be greater than 0");
-//        }
-//
-//        final TimeSeries series = new TimeSeries(name);
-//        final int num = chartDatas.size();
-//
-//        final Core core = new Core();
-//        final int allocationSize = num - core.smaLookback(period);
-//        if (allocationSize <= 0) {
-//            return series;
-//        }
-//        final double[] last = new double[num];
-//        // Fill up last array.
-//        for (int i = 0; i < num; i++) {
-//            last[i] = chartDatas.get(i).lastPrice;
-//        }
-//
-//        final double[] output = new double[allocationSize];
-//        final MInteger outBegIdx = new MInteger();
-//        final MInteger outNbElement = new MInteger();
-//
-//        core.sma(0, last.length - 1, last, period, outBegIdx, outNbElement, output);
-//
-//        for (int i = 0; i < outNbElement.value; i++) {
-//            series.add(new Day(new Date(chartDatas.get(i + outBegIdx.value).timestamp)), output[i]);
-//        }
-//
-//        return series;
-//    }
+
 //
 //    public static MACD.ChartResult createMACD(List<ChartData> chartDatas, String name, MACD.Period period) {
 //        final int num = chartDatas.size();
