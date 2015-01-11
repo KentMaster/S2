@@ -109,6 +109,8 @@ dependencies {
         exclude(module: 'scalap')
         exclude(module: 'scala-compiler')
     }
+    compile 'org.nuiton.thirdparty:Rserve:1.7-3'
+    compile 'org.nuiton.thirdparty:REngine:1.7-3'
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: json_path_version
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version

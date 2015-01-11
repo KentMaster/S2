@@ -1,6 +1,10 @@
 package com.zhou.stockindicator;
 
 import com.zhou.stockindicator.config.Constants;
+import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +29,7 @@ public class Application {
     @Inject
     private Environment env;
 
+
     /**
      * Initializes StockIndicator.
      * <p/>
@@ -43,7 +48,7 @@ public class Application {
     /**
      * Main method, used to run the application.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RserveException, REXPMismatchException {
         SpringApplication app = new SpringApplication(Application.class);
         app.setShowBanner(false);
 
