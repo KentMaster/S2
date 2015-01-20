@@ -10,4 +10,5 @@ public interface StockInfoRepository extends MongoRepository<StockInfo, String> 
 
     @Query
     public Page<StockInfo> getBySymbol(String symbol, Pageable pageable);
+
 }
