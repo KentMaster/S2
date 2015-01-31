@@ -7,6 +7,7 @@ import com.zhou.stockindicator.repository.FiftyDayMovingAverageRepository;
 import com.zhou.stockindicator.repository.StockInfoRepository;
 import com.zhou.stockindicator.repository.TwoHundredDayMovingAverageRepository;
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +23,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,38 +43,36 @@ public class YahooStockInfoService {
 
     public void getStockDataFromYahoo(String symbol) throws IOException {
         log.debug("***Symbol***"+symbol);
+        Optional<StockInfo> optionalStartDate = stockInfoRepository.findFirstByOrderByDateDesc();
+        DateTime dateTimeNow = DateTime.now();
+        String[] startDate;
+        if(optionalStartDate.isPresent()){
+            startDate = optionalStartDate.get().getDate().split("-");
+        }else{
+            startDate = String.format("%s-%s-%s",(dateTimeNow.getYear()-2),dateTimeNow.getMonthOfYear()-1,dateTimeNow.getDayOfMonth()).split("-");
+        }
         File f = new File(symbol + ".csv");
         if(!f.exists()) {
             FileUtils.copyURLToFile(
-                    new URL(String.format("http://real-chart.finance.yahoo.com/table.csv?s=%s&d=11&e=21&f=2014&g=d&a=11&b=12&c=2013&ignore=.csv", symbol)),
+                    new URL(String.format(
+                            "http://real-chart.finance.yahoo.com/table.csv?s=%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s&g=d&ignore=.csv",
+                            symbol,
+                            Integer.parseInt(startDate[1]),
+                            startDate[2],
+                            startDate[0],
+                            dateTimeNow.getMonthOfYear()-1,
+                            dateTimeNow.getDayOfMonth(),
+                            dateTimeNow.getYear()
+                            )),
                     new File(symbol + ".csv")
             );
         }
-        List<StockInfo> stockInfos1 = readRecords(symbol);
-        Pageable firstFifty = new PageRequest(0, 50, new Sort(Sort.Direction.DESC, "date"));
-        List<StockInfo> stockInfos = stockInfoRepository.getBySymbol(symbol,firstFifty).getContent();
-        double sum = stockInfos.stream().mapToDouble(StockInfo::getAdjustedClose).sum()/50;
-        fiftyDayMovingAverageRepository.save(new FiftyDayMovingAverge(stockInfos1.get(49).getDate(), symbol, sum));
-//        for(int i = 51; i < stockInfos1.size(); i++){
-//            StockInfo stockInfo = stockInfoRepository.getBySymbol(symbol, new PageRequest(i, 1, new Sort(Sort.Direction.DESC, "date"))).getContent().get(0);
-//            stockInfos.remove(0);
-//            stockInfos.add(stockInfo);
-//            double sum2 = stockInfos.stream().mapToDouble(StockInfo::getAdjustedClose).sum();
-//            fiftyDayMovingAverageRepository.save(new FiftyDayMovingAverge(stockInfos1.get(i).getDate(), symbol, sum2));
-//        }
-
-        Pageable firstTwoHundred = new PageRequest(0, 200, new Sort(Sort.Direction.DESC, "date"));
-        List<StockInfo> stockInfos2 = stockInfoRepository.getBySymbol(symbol,firstTwoHundred).getContent();
-        double sum3 = stockInfos2.stream().mapToDouble(StockInfo::getAdjustedClose).sum();
-        twoHundredDayMovingAverageRepository.save(new TwoHundredDayMovingAverage(stockInfos1.get(199).getDate(), symbol, sum3));
-//        for(int i = 201; i < stockInfos1.size(); i++){
-//            StockInfo stockInfo = stockInfoRepository.getBySymbol(symbol, new PageRequest(i, 1, new Sort(Sort.Direction.DESC, "date"))).getContent().get(0);
-//            stockInfos2.remove(0);
-//            stockInfos2.add(stockInfo);
-//            double sum2 = stockInfos2.stream().mapToDouble(StockInfo::getAdjustedClose).sum();
-//            twoHundredDayMovingAverageRepository.save(new TwoHundredDayMovingAverage(stockInfos1.get(i).getDate(), symbol, sum2));
-//        }
-
+        List<StockInfo> stockInfos = readRecords(symbol);
+        Comparator<StockInfo> orderByDate = (s1, s2) -> s1.getDate().compareTo(s2.getDate());
+        List<StockInfo> stockInfoSortedByDate = stockInfos.stream().sorted(orderByDate).collect(Collectors.toList());
+        mapFiftyDayMovingAverage(stockInfoSortedByDate, 50);
+        mapTwoHundredDayMovingAverage(stockInfoSortedByDate, 200);
+//        List<StockInfo> stockInfos = stockInfoRepository.findAll(new Sort(Sort.Direction.DESC, "date"));
     }
 
     public List<StockInfo> getStockInfo(String symbol, int pageNumber){
@@ -88,6 +90,32 @@ public class YahooStockInfoService {
                 .map(csvToStockInfo)
                 .collect(Collectors.toList());
         return collect;
+    }
+
+    public List<FiftyDayMovingAverge> mapFiftyDayMovingAverage(List<StockInfo> stockInfo, int interval){
+            List<FiftyDayMovingAverge> movingAverages = new ArrayList<>();
+            for(int i = 0; i < stockInfo.size()-50; i++){
+                List<StockInfo> subStockInfos = stockInfo.subList(i, i + interval);
+                double average = subStockInfos.stream().parallel().mapToDouble(StockInfo::getClose).sum()/interval;
+                FiftyDayMovingAverge  fiftyDayMovingAverge =  new FiftyDayMovingAverge(subStockInfos.get(subStockInfos.size()-1).getDate(), stockInfo.get(interval+i).getSymbol() ,average);
+                movingAverages.add(fiftyDayMovingAverge);
+                fiftyDayMovingAverageRepository.save(fiftyDayMovingAverge);
+            }
+            return movingAverages;
+    }
+
+    public List<TwoHundredDayMovingAverage> mapTwoHundredDayMovingAverage(List<StockInfo> stockInfo, int interval){
+
+        List<TwoHundredDayMovingAverage> movingAverages = new ArrayList<>();
+        for(int i = 0; i <= stockInfo.size()-200; i++){
+            List<StockInfo> subStockInfos = stockInfo.subList(i, i + interval);
+            double average = subStockInfos.stream().parallel().mapToDouble(StockInfo::getClose).sum()/interval;
+            TwoHundredDayMovingAverage twoHundredDayMovingAverage = new TwoHundredDayMovingAverage(subStockInfos.get(subStockInfos.size()-1).getDate(), stockInfo.get(interval+i).getSymbol() ,average);
+            movingAverages.add(twoHundredDayMovingAverage);
+            twoHundredDayMovingAverageRepository.save(twoHundredDayMovingAverage);
+        }
+        return movingAverages;
+
     }
 
     public StockInfo save(String input, String symbol) {

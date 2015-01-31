@@ -124,4 +124,16 @@ angular.module('stockindicatorApp')
                 });
             }
         };
-    });
+    })
+    .directive("showModal", function(){
+        return {
+            restrict: "AE",
+            templateUrl: "../views/infoModal.html",
+            scope:
+            {
+                marketType: '@'
+            },
+            controller: "xMarket"
+        }
+    })
+;

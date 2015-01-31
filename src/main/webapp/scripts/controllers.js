@@ -25,6 +25,81 @@ stockindicatorApp.controller('LanguageController', function ($scope, $translate,
 stockindicatorApp.controller('MenuController', function ($scope) {
     });
 
+stockindicatorApp.controller('xMarket', function ($scope) {
+    $scope.bullMarket = [
+        {name: "Golden Cross", isOn: true},
+        {name: "Gap Up", isOn: false},
+        {name: "New High", isOn: false},
+        {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+        {name: "MACD Zero Line Crossover", isOn: false},
+        {name: "14 Day RSI Oversold", isOn: false}
+    ];
+
+    $scope.setActive  = function(name){
+        if(name === "Golden Cross"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: true},
+                {name: "Gap Up", isOn: false},
+                {name: "New High", isOn: false},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+                {name: "MACD Zero Line Crossover", isOn: false},
+                {name: "14 Day RSI Oversold", isOn: false}
+            ];
+
+        }else if(name === "Gap Up"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: false},
+                {name: "Gap Up", isOn: true},
+                {name: "New High", isOn: false},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+                {name: "MACD Zero Line Crossover", isOn: false},
+                {name: "14 Day RSI Oversold", isOn: false}
+            ];
+
+        }else if(name === "New High"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: false},
+                {name: "Gap Up", isOn: false},
+                {name: "New High", isOn: true},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+                {name: "MACD Zero Line Crossover", isOn: false},
+                {name: "14 Day RSI Oversold", isOn: false}
+            ];
+
+        }else if(name === "MACD Signal Line Crossoverew Highs"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: false},
+                {name: "Gap Up", isOn: false},
+                {name: "New High", isOn: false},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: true},
+                {name: "MACD Zero Line Crossover", isOn: false},
+                {name: "14 Day RSI Oversold", isOn: false}
+            ];
+
+        }else if(name === "MACD Zero Line Crossover"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: false},
+                {name: "Gap Up", isOn: false},
+                {name: "New High", isOn: false},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+                {name: "MACD Zero Line Crossover", isOn: true},
+                {name: "14 Day RSI Oversold", isOn: false}
+            ];
+
+        }
+        else if(name === "14 Day RSI Oversold"){
+            $scope.bullMarket = [
+                {name: "Golden Cross", isOn: false},
+                {name: "Gap Up", isOn: false},
+                {name: "New High", isOn: false},
+                {name: "MACD Signal Line Crossoverew Highs", isOn: false},
+                {name: "MACD Zero Line Crossover", isOn: false},
+                {name: "14 Day RSI Oversold", isOn: true}
+            ];
+
+        }
+    }
+});
 stockindicatorApp.controller('StockController', function ($scope, StockService, Reddit) {
     $scope.symbol = "T";
 
